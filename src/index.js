@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import React, {Component} from 'react';
 import ReactDOM from 'react-dom';
 import {YOUTUBE_API_KEY} from './config/youtube.js';
@@ -31,14 +32,17 @@ class App extends Component{
   }
 
   render() {
-    return (<div>
-      <SearchBar onSearchTermChange={term =>this.videoSearch(term)} />
-      <VideoDetail video={this.state.selectedVideo}/>
-      <VideoList 
-        videos={this.state.videos}
-        onVideoSelect = {selectedVideo => this.setState({selectedVideo: selectedVideo})}
-      />
-    </div>
+    const videoSearch = _.debounce((term) => {this.videoSearch(term)}, 300);
+
+    return (
+      <div>
+        <SearchBar onSearchTermChange={videoSearch} />
+        <VideoDetail video={this.state.selectedVideo}/>
+        <VideoList 
+          onVideoSelect = {selectedVideo => this.setState({selectedVideo: selectedVideo})}
+          videos={this.state.videos}
+         />
+      </div>
     );
   } 
 }
